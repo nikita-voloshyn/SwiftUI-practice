@@ -26,48 +26,53 @@ struct ContentView: View {
     var body: some View{
         NavigationView{
             Form {
-                Section{//Количество людей и размер чека
-                    TextField("Amound", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                        .keyboardType(.decimalPad)
-                        .focused($amoundIsFocused)
+                    Section{ //Количество людей и размер чека
+                        TextField("Amound", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                            .keyboardType(.decimalPad)
+                            .focused($amoundIsFocused)
+                        
+                        Picker("Number of people", selection: $numberOfPeople){ // количество людей
+                            ForEach(2..<100) {
+                                Text("\($0) people")
+                            }
+                        }
+                    }
                     
-                    Picker("Number of people", selection: $numberOfPeople){
-                        ForEach(2..<100) {
-                            Text("\($0) people")
+                    Section { // процент чаевых на выбор
+                        Picker("Tip percentage", selection: $tipPercentage) {
+                            ForEach(tipPercentages, id: \.self) {
+                                Text($0, format: .percent)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    } header: {
+                        Text("How much tip do you want to leave?")
+                    }
+                    .navigationTitle("WeSplit")// заголовок
+                    
+                    .toolbar { // способность закрыть клаву
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            
+                            Button("Done") {
+                                amoundIsFocused = false
+                            }
                         }
                     }
-                }
-                Section {
-                    Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(tipPercentages, id: \.self) {
-                            Text($0, format: .percent)
-                        }
+                    
+                    Section{ // финальная сумма с учетом чаевых
+                        Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    } header: {
+                        Text("Amount per person")
                     }
-                    .pickerStyle(.segmented)
-                } header: {
-                    Text("How much tip do you want to leave?")
-                }
-                .navigationTitle("WeSplit")
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-
-                        Button("Done") {
-                            amoundIsFocused = false
-                        }
-                    }
-                }
-                
-                Section{// финальная сумма с учетом чаевых
-                    Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
             }
         }
     }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
+        }
     }
-}
+
