@@ -4,7 +4,7 @@
 //
 //  Created by Волошин Нікіта on 30.03.2023.
 
-//      Преобразование времени: пользователи выбирают секунды, минуты, часы или дни.
+//
 
 //
 
@@ -19,26 +19,40 @@ struct ContentView: View {
     
     
     var body: some View {
-        NavigationView{
             Form{
-                
-                
                 Section{ //выбор входного значения + текстовое поле для ввода
                     Picker("", selection: $typesOfTime){
                         ForEach(typesOfTime, id: \.self){
                             Text($0)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.wheel)
+                    .frame(width: 350, height: 140)
                     TextField("Enter quantity", text: $inputAmount)
                 }
             header: {Text("Сhoose which type you will convert")}  // название
                     .navigationTitle("TimeWrap")
+                    .padding(.top)
                 
+                
+                Section{ // выбор выходного значения
+                    Picker("", selection: $typesOfTime){
+                        ForEach(typesOfTime, id: \.self){
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 350, height: 170)
+                }
+            header: {Text("Choose the type you want to get")}
+                
+                Section{
+                    Text("")
+                } header: {Text("Your result in:")}
             }
         }
     }
-}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
